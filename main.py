@@ -10,6 +10,8 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QWidget, QTableWidgetItem
 from PyQt5.uic import loadUi
 
+from TaskSolver import TaskSolver
+
 
 class Launcher(QWidget):
 
@@ -37,23 +39,41 @@ class Launcher(QWidget):
         self.qPushButtonRandom.clicked.connect(self.qPushButtonRandomOnClick)
         self.qPushButtonSolver.clicked.connect(self.qPushButtonSolverOnClick)
 
-
     def qPushButtonClearOnClick(self):
         self.qTableWidget.clearContents()
-
 
     def qPushButtonRandomOnClick(self):
         self.qPushButtonClearOnClick()
         j = 0
         while j < self.qTableWidget.columnCount():
-            random_num = randint(-100, 100)
+            random_num = randint(-10, 10)
             self.qTableWidget.setItem(0, j, QTableWidgetItem(str(random_num)))
             j += 1
 
-
     def qPushButtonSolverOnClick(self):
-        pass
-
+        resList = []
+        try:
+            j = 0
+            while j < self.qTableWidget.columnCount():
+                a = self.qTableWidget.item(0, j).text()
+                resList.append(float(a))
+                j += 1
+            fg = TaskSolver(resList)
+            reshenie = fg.getReshenie()
+            j = 0
+            while j < self.qTableWidget.columnCount():
+                y = reshenie[j]
+                self.qTableWidget.setItem(1, j, QTableWidgetItem(str("%.4f" % y)))
+                # print(y)
+                j += 1
+        except:
+            i = 0
+            while i < self.qTableWidget.rowCount():
+                j = 0
+                while j < self.qTableWidget.columnCount():
+                    self.qTableWidget.setItem(i, j, QTableWidgetItem("?"))
+                    j += 1
+                i += 1
 
 
 app = QApplication(sys.argv)
